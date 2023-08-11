@@ -25,6 +25,7 @@ public class MonsterCtrl : MonoBehaviour
     BoxCollider col;
     NavMeshAgent nav;
     Animator ani;
+    Material mat;
 
     GameObject player;
     float betweendist;
@@ -35,6 +36,7 @@ public class MonsterCtrl : MonoBehaviour
         col = GetComponent<BoxCollider>();
         nav = GetComponent<NavMeshAgent>();
         ani = GetComponentInChildren<Animator>();
+        mat = GetComponent<SkinnedMeshRenderer>().material;
     }
 
     private void Start()
@@ -61,6 +63,7 @@ public class MonsterCtrl : MonoBehaviour
         isDie = false;
         col.enabled = true;
         rgd.isKinematic = false;
+        mat.color = Color.white;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -72,8 +75,10 @@ public class MonsterCtrl : MonoBehaviour
                 if (GameManager.instance.playerCtrl.isHit)
                     return;
                 else
+                {                 
                     curHP -= GameManager.instance.playerCtrl.ATK;
-
+                    StartCoroutine(OnDamage());
+                }
                 GameManager.instance.playerCtrl.isHit = true;
             }
         }
@@ -83,6 +88,7 @@ public class MonsterCtrl : MonoBehaviour
             if (GameManager.instance.playerCtrl.isSkill)
             {
                 curHP -= GameManager.instance.playerCtrl.ATK;
+                StartCoroutine(OnDamage());
             }
         }
 
@@ -144,5 +150,16 @@ public class MonsterCtrl : MonoBehaviour
         isAttack = false;
         ani.SetBool("isAttack", false);
         canAttack = true;
+    }
+
+    IEnumerator OnDamage()
+    {
+        mat.color = Color.red;
+        yield return new WaitForSeconds(0.3f);
+
+        if (curHP > 0)
+            mat.color = Color.white;
+        else
+            mat.color = Color.gray;
     }
 }
