@@ -22,7 +22,9 @@ public class GameManager : MonoBehaviour
     public float maxExp = 5;
     public float hp;
     public float maxHP;
+    public float kill;
 
+    [HideInInspector] public bool isPlayed;
     bool paused;
 
     private void Awake()
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
         instance = this;
         Application.targetFrameRate = 60;
         maxHP = playerCtrl.maxHP;
+        isPlayed = false;
         PauseGame();
     }
 
@@ -50,14 +53,14 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        if(pause)
+        if (pause)
         {
             paused = true;
             PauseGame();
         }
         else
         {
-            if(paused)
+            if (paused && isPlayed)
             {
                 paused = false;
                 ResumeGame();
@@ -77,11 +80,16 @@ public class GameManager : MonoBehaviour
     public void GetExp()
     {
         exp++;
-        if (exp >= maxExp) 
+        if (exp >= maxExp)
         {
             level++;
             maxExp *= 1.2f;
             exp = 0;
         }
+    }
+
+    public void MonsterKill()
+    {
+        kill++;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DataManager : MonoBehaviour
 {
-    public enum DataType { Exp, Level, HP };
+    public enum DataType { Exp, Level, HP, Kill };
     public DataType dataType;
 
     Text dataText;
@@ -37,6 +37,9 @@ public class DataManager : MonoBehaviour
                 if (curHP > maxHP)
                     curHP = maxHP;
                 dataSlider.value = curHP / maxHP;
+                break;
+            case DataType.Kill:
+                dataText.text = string.Format("KILL : {0:F0}", GameManager.instance.kill);
                 break;
         }
     }

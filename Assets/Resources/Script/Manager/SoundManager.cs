@@ -16,6 +16,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlayNextBGM()
     {
+        GameManager.instance.isPlayed = true;
         BGMSound.Stop();
         BGMSoundPlay(bgmList[1]);
     }

@@ -25,7 +25,7 @@ public class MonsterCtrl : MonoBehaviour
     BoxCollider col;
     NavMeshAgent nav;
     Animator ani;
-    Material mat;
+    SkinnedMeshRenderer damagedMesh;
 
     GameObject player;
     float betweendist;
@@ -36,14 +36,14 @@ public class MonsterCtrl : MonoBehaviour
         col = GetComponent<BoxCollider>();
         nav = GetComponent<NavMeshAgent>();
         ani = GetComponentInChildren<Animator>();
-        mat = GetComponent<SkinnedMeshRenderer>().material;
+        damagedMesh = GetComponent<SkinnedMeshRenderer>();
     }
 
     private void Start()
     {
         ChaseStart();
         curHP = maxHP;
-     }
+    }
 
     private void Update()
     {
@@ -63,7 +63,6 @@ public class MonsterCtrl : MonoBehaviour
         isDie = false;
         col.enabled = true;
         rgd.isKinematic = false;
-        mat.color = Color.white;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -78,8 +77,8 @@ public class MonsterCtrl : MonoBehaviour
                 {                 
                     curHP -= GameManager.instance.playerCtrl.ATK;
                     StartCoroutine(OnDamage());
+                    GameManager.instance.playerCtrl.isHit = true;
                 }
-                GameManager.instance.playerCtrl.isHit = true;
             }
         }
 
@@ -101,6 +100,7 @@ public class MonsterCtrl : MonoBehaviour
             ani.SetBool("isDead", true);
             GameManager.instance.soundManager.SFXPlay("Dead", DeadSound);
             GameManager.instance.GetExp();
+            GameManager.instance.MonsterKill();
         }
     }
 
@@ -154,12 +154,10 @@ public class MonsterCtrl : MonoBehaviour
 
     IEnumerator OnDamage()
     {
-        mat.color = Color.red;
-        yield return new WaitForSeconds(0.3f);
+        damagedMesh.enabled = true;
 
-        if (curHP > 0)
-            mat.color = Color.white;
-        else
-            mat.color = Color.gray;
+        yield return new WaitForSeconds(0.1f);
+
+        damagedMesh.enabled = false;
     }
 }

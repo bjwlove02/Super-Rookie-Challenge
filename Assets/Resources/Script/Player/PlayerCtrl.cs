@@ -19,7 +19,7 @@ public class PlayerCtrl : MonoBehaviour
     [HideInInspector] public bool isChase;
     [HideInInspector] public bool isAttack;
     [HideInInspector] public bool isKill = false;
-    [HideInInspector] public bool isHit = false;
+    [HideInInspector] public bool isHit = true;
     [HideInInspector] public bool isSkill = false;
     [HideInInspector] public bool canAttack = true;
     [HideInInspector] public bool canSkill1 = false;
@@ -118,7 +118,9 @@ public class PlayerCtrl : MonoBehaviour
         canAttack = false;
 
         yield return new WaitForSeconds(0.3f);
+
         GameManager.instance.soundManager.SFXPlay("PlayerAttack", AttackSound);
+        isHit = false;
 
         yield return new WaitForSeconds(attackSpeed);
         if (isSkill) 
@@ -128,7 +130,6 @@ public class PlayerCtrl : MonoBehaviour
         isAttack = false;
         ani.SetBool("isAttack1", false);
         canAttack = true;
-        isHit = false;
     }
 
     public IEnumerator Skill1()
